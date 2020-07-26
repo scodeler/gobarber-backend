@@ -39,50 +39,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var AppError_1 = __importDefault(require("@shared/errors/AppError"));
+var faker_1 = __importDefault(require("faker"));
+// import AppError from '@shared/errors/AppError';
 var FakeUsersRepository_1 = __importDefault(require("@modules/users/repositories/fakes/FakeUsersRepository"));
-var CreateUserService_1 = __importDefault(require("./CreateUserService"));
-var FakeHashProvider_1 = __importDefault(require("../providers/HashProvider/fakes/FakeHashProvider"));
+var FakeHashProvider_1 = __importDefault(require("@modules/users/providers/HashProvider/fakes/FakeHashProvider"));
+var UpdateProfileService_1 = __importDefault(require("./UpdateProfileService"));
 var fakeUsersRepository;
 var fakeHashProvider;
-var createUser;
-describe('CreateUser', function () {
+var updateProfile;
+describe('UpdateProfile', function () {
     beforeEach(function () {
         fakeUsersRepository = new FakeUsersRepository_1.default();
         fakeHashProvider = new FakeHashProvider_1.default();
-        createUser = new CreateUserService_1.default(fakeUsersRepository, fakeHashProvider);
+        updateProfile = new UpdateProfileService_1.default(fakeUsersRepository, fakeHashProvider);
     });
-    it('should be able to create a new user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user;
+    it('should be able to update the profile', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var userData, user;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, createUser.execute({
-                        name: 'John Doe',
-                        email: 'johndoe@example.com',
-                        password: '123456',
-                    })];
+                case 0:
+                    userData = {
+                        name: faker_1.default.name.firstName() + " " + faker_1.default.name.lastName(),
+                        email: faker_1.default.internet.email(),
+                        password: faker_1.default.internet.password(),
+                    };
+                    return [4 /*yield*/, fakeUsersRepository.create(userData)];
                 case 1:
                     user = _a.sent();
-                    expect(user).toHaveProperty('id');
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('should not be able to create a new user with existant email', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, createUser.execute({
-                        name: 'John Doe',
-                        email: 'johndoe@example.com',
-                        password: '123456',
-                    })];
-                case 1:
-                    _a.sent();
-                    return [4 /*yield*/, expect(createUser.execute({
-                            name: 'John Doe',
-                            email: 'johndoe@example.com',
-                            password: '123456',
-                        })).rejects.toBeInstanceOf(AppError_1.default)];
+                    return [4 /*yield*/, updateProfile.execute({
+                            user_id: user.id,
+                            name: faker_1.default.name.firstName() + " " + faker_1.default.name.lastName(),
+                            email: faker_1.default.internet.email(),
+                        })];
                 case 2:
                     _a.sent();
                     return [2 /*return*/];

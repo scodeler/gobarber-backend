@@ -43,20 +43,24 @@ var AppError_1 = __importDefault(require("@shared/errors/AppError"));
 var FakeUsersRepository_1 = __importDefault(require("@modules/users/repositories/fakes/FakeUsersRepository"));
 var FakeStorageProvider_1 = __importDefault(require("@shared/container/providers/StorageProvider/fakes/FakeStorageProvider"));
 var UpdateUserAvatarService_1 = __importDefault(require("./UpdateUserAvatarService"));
+var fakeUsersRepository;
+var fakeStorageProvider;
+var updateUserAvatar;
 describe('CreateUser', function () {
+    beforeEach(function () {
+        fakeUsersRepository = new FakeUsersRepository_1.default();
+        fakeStorageProvider = new FakeStorageProvider_1.default();
+        updateUserAvatar = new UpdateUserAvatarService_1.default(fakeUsersRepository, fakeStorageProvider);
+    });
     it('should be able to create a new user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var fakeUsersRepository, fakeStorageProvider, updateUserAvatar, user;
+        var user;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    fakeUsersRepository = new FakeUsersRepository_1.default();
-                    fakeStorageProvider = new FakeStorageProvider_1.default();
-                    updateUserAvatar = new UpdateUserAvatarService_1.default(fakeUsersRepository, fakeStorageProvider);
-                    return [4 /*yield*/, fakeUsersRepository.create({
-                            name: 'John Doe',
-                            email: 'johndoe@example.com',
-                            password: '123456',
-                        })];
+                case 0: return [4 /*yield*/, fakeUsersRepository.create({
+                        name: 'John Doe',
+                        email: 'johndoe@example.com',
+                        password: '123456',
+                    })];
                 case 1:
                     user = _a.sent();
                     return [4 /*yield*/, updateUserAvatar.execute({
@@ -71,27 +75,24 @@ describe('CreateUser', function () {
         });
     }); });
     it('should not be update a non existing user avatar', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var fakeUsersRepository, fakeStorageProvider, updateUserAvatar;
         return __generator(this, function (_a) {
-            fakeUsersRepository = new FakeUsersRepository_1.default();
-            fakeStorageProvider = new FakeStorageProvider_1.default();
-            updateUserAvatar = new UpdateUserAvatarService_1.default(fakeUsersRepository, fakeStorageProvider);
-            expect(updateUserAvatar.execute({
-                user_id: 'non-existing-user',
-                avatarFilename: 'avatar.jpg',
-            })).rejects.toBeInstanceOf(AppError_1.default);
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, expect(updateUserAvatar.execute({
+                        user_id: 'non-existing-user',
+                        avatarFilename: 'avatar.jpg',
+                    })).rejects.toBeInstanceOf(AppError_1.default)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
         });
     }); });
     it('should delete old avatar when updating a new one', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var fakeUsersRepository, fakeStorageProvider, deleteFile, updateUserAvatar, user;
+        var deleteFile, user;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    fakeUsersRepository = new FakeUsersRepository_1.default();
-                    fakeStorageProvider = new FakeStorageProvider_1.default();
                     deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
-                    updateUserAvatar = new UpdateUserAvatarService_1.default(fakeUsersRepository, fakeStorageProvider);
                     return [4 /*yield*/, fakeUsersRepository.create({
                             name: 'John Doe',
                             email: 'johndoe@example.com',

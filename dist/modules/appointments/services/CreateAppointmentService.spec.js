@@ -42,18 +42,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var AppError_1 = __importDefault(require("@shared/errors/AppError"));
 var FakeAppointmentsRepository_1 = __importDefault(require("@modules/appointments/repositories/fakes/FakeAppointmentsRepository"));
 var CreateAppointmentService_1 = __importDefault(require("./CreateAppointmentService"));
+var fakeAppointmentsRepository;
+var createAppointment;
 describe('CreateAppointment', function () {
+    beforeEach(function () {
+        fakeAppointmentsRepository = new FakeAppointmentsRepository_1.default();
+        createAppointment = new CreateAppointmentService_1.default(fakeAppointmentsRepository);
+    });
     it('should be able to create a new appointment', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var fakeAppointmentsRepository, createAppointment, appointment;
+        var appointment;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    fakeAppointmentsRepository = new FakeAppointmentsRepository_1.default();
-                    createAppointment = new CreateAppointmentService_1.default(fakeAppointmentsRepository);
-                    return [4 /*yield*/, createAppointment.execute({
-                            date: new Date(),
-                            provider_id: '5646546465',
-                        })];
+                case 0: return [4 /*yield*/, createAppointment.execute({
+                        date: new Date(),
+                        provider_id: '5646546465',
+                    })];
                 case 1:
                     appointment = _a.sent();
                     expect(appointment).toHaveProperty('id');
@@ -63,12 +66,10 @@ describe('CreateAppointment', function () {
         });
     }); });
     it('should be not able to create 2 appointments at the same time', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var fakeAppointmentsRepository, createAppointment, appointmentDate;
+        var appointmentDate;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    fakeAppointmentsRepository = new FakeAppointmentsRepository_1.default();
-                    createAppointment = new CreateAppointmentService_1.default(fakeAppointmentsRepository);
                     appointmentDate = new Date(2020, 4, 10, 11);
                     return [4 /*yield*/, createAppointment.execute({
                             date: appointmentDate,
