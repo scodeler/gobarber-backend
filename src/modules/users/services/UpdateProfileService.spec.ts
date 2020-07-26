@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import faker from 'faker';
+import { uuid } from 'uuidv4';
 
 import AppError from '@shared/errors/AppError';
 
@@ -107,6 +108,16 @@ describe('UpdateProfile', () => {
         password: faker.internet.password(),
       }),
     ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to update the profile of a non existing user', async () => {
+    await expect(
+      updateProfile.execute({
+        user_id: uuid(),
+        name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+        email: faker.internet.email(),
+      }),
+    );
   });
 
   it('should not be able to update the password with wrong password', async () => {

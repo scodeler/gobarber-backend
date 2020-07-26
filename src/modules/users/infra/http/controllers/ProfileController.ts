@@ -9,6 +9,7 @@ export default class ProfileController {
     const user_id = request.user.id;
     const showProfile = container.resolve(ShowProfileService);
     const user = await showProfile.execute({ user_id });
+    delete user.password;
     return response.json(user);
   }
 
